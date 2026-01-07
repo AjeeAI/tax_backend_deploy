@@ -27,7 +27,8 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173",
-                   "https://taxwise-ng-1.web.app"],  
+                   "https://taxwise-ng-1.web.app",
+                   "https://taxwise-90fe3.web.app"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
