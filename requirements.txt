@@ -17,3 +17,5 @@ sqlalchemy
 bcrypt
 pyjwt
 jwt
+langchain-community
+langchain-text-splitters
