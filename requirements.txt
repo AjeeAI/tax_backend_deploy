@@ -13,3 +13,5 @@ langchain-chroma
 pydantic
 numpy
 pandas
+sqlalchemy
+bcrypt
