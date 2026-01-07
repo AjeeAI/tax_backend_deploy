@@ -13,14 +13,20 @@ DB_HOST = os.getenv("DB_HOST")
 DB_PORT = os.getenv("DB_PORT")
 DB_NAME = os.getenv("DB_NAME")
 
+
 DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# 2. Build the full path to the certificate
+ssl_cert_path = os.path.join(BASE_DIR, "isrgrootx1.pem")
+
 
 engine = create_engine(
     DATABASE_URL,
     connect_args={
         "ssl": {
-            # This empty dictionary is often enough to trigger SSL 
-            # using the system's installed CA certificates.
+            "ca": ssl_cert_path
         }
     }
 )
