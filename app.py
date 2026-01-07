@@ -212,7 +212,7 @@ class TaxAssistant:
         ]
         
         # This yields chunks of text as they are generated
-        for chunk in self.llm.stream(messages):
+        for chunk in self.agent.stream(messages):
             if chunk.content:
                 yield chunk.content
 
