@@ -3,7 +3,8 @@ from sqlalchemy.orm import sessionmaker, declarative_base
 from dotenv import load_dotenv
 import os
 import logging
-
+import ssl      # Import SSL
+import certifi  # Import Certifi
 
 load_dotenv()
 
@@ -15,22 +16,15 @@ DB_NAME = os.getenv("DB_NAME")
 
 DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# 2. Build the full path to the certificate
-ssl_cert_path = os.path.join(BASE_DIR, "isrgrootx1.pem")
-
-
+# --- UPDATED ENGINE CONFIGURATION ---
 engine = create_engine(
     DATABASE_URL,
     connect_args={
         "ssl": {
-            "ca": ssl_cert_path
+            "ca": certifi.where()  # Automatically finds the certificate
         }
     }
 )
-
-
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -45,15 +39,10 @@ def get_db():
 
 # Auto-create tables on import
 def init_db():
-    """Create database tables if they don't exist."""
     try:
-        # Import models here to avoid circular imports
         from database.models import User
-        
-        # Create all tables
         Base.metadata.create_all(bind=engine)
         logging.info("Database tables created/verified")
-        
     except Exception as e:
         logging.error(f"Failed to create database tables: {e}")
         raise
