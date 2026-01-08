@@ -21,9 +21,14 @@ engine = create_engine(
     DATABASE_URL,
     connect_args={
         "ssl": {
-            "ca": certifi.where()  # Automatically finds the certificate
+            "ca": certifi.where()  # Keep this for secure connection
         }
-    }
+    },
+    #  ADDED THESE LINES TO FIX THE DISCONNECTION ERROR:
+    pool_pre_ping=True,    # Tests the connection before handing it to the app
+    pool_recycle=1800,     # Refreshes connections every 30 minutes
+    pool_size=10,          # Keeps up to 10 connections ready
+    max_overflow=20        # Allows 20 extra temporary connections if busy
 )
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
