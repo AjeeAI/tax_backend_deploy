@@ -80,42 +80,23 @@ DB_NAME = os.getenv("DB_NAME")
 # 2. Construct the connection URL
 DATABASE_URL = f"mysql+pymysql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 
-<<<<<<< HEAD
-# 3. Build path to SSL certificate
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ssl_cert_path = os.path.join(BASE_DIR, "isrgrootx1.pem")
-
-# 4. Create Engine with TiDB-specific optimizations
-=======
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # 2. Build the full path to the certificate
 ssl_cert_path = os.path.join(BASE_DIR, "isrgrootx1.pem")
 
 
->>>>>>> 0419778639806c633c2b8cd026eb13da8c356b45
 engine = create_engine(
     DATABASE_URL,
     connect_args={
         "ssl": {
             "ca": ssl_cert_path
         }
-<<<<<<< HEAD
-    },
-    # --- CRITICAL FIXES FOR TiDB SERVERLESS ---
-    pool_pre_ping=True,    # Test the connection before using it (fixes 2013 Lost Connection)
-    pool_recycle=60,       # Recycle connections every 60 seconds (prevents stale connections)
-    pool_size=5,           # Keep a small pool
-    max_overflow=10        # Allow bursts of extra connections
-)
-
-=======
     }
 )
 
 
 
->>>>>>> 0419778639806c633c2b8cd026eb13da8c356b45
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
