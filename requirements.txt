@@ -22,4 +22,3 @@ pydantic
 openai
 chromadb
 pyjwt
-uvicorn
