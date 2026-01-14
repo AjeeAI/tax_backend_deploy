@@ -92,15 +92,13 @@ class TaxAssistant:
                 impact = result["impact"]
 
                 return f"""
-        
-        
 **Nigeria PAYE Tax Impact (Reform Analysis)**
 
 **Income**
 • Monthly Income: ₦{result['monthly_income']:,.2f}
 • Annual Income: ₦{result['annual_income']:,.2f}
 
-**Former System ({current['label']})**
+**Old System ({current['label']})**
 • Annual Tax: ₦{current['annual_tax']:,.2f}
 • Effective Rate: {current['effective_rate']}%
 
@@ -118,7 +116,7 @@ class TaxAssistant:
 """
             except Exception as e:
                 return f"Tax calculation failed: {str(e)}"
-        browser = DuckDuckGoSearchResults()
+        browser = DuckDuckGoSearchResults(max_results = 5)
         return [retriever_tool, calculate_nigeria_tax_2025, browser]
 
 
@@ -213,6 +211,7 @@ class TaxAssistant:
                          "If you are asked a question that is unrelated to taxes, politely decline and state that you are Tax assistant." 
                          "Answer only using retrieved Nigerian tax laws." 
                          "If information is missing, say you do not have it."
+                         "If you have no info, consult the browser tool"
                 )
             )
             messages = [system] + state["messages"]
