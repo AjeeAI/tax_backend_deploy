@@ -22,4 +22,4 @@ pydantic
 openai
 chromadb
 pyjwt
-duckduckgo-search
+duckduckgo-search==5.3.1
