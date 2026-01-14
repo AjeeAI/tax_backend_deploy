@@ -14,6 +14,7 @@ from langchain_core.documents import Document
 from langgraph.graph import StateGraph, MessagesState, START, END
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.sqlite import SqliteSaver
+from langchain_community.tools import DuckDuckGoSearchResults
 from engine.tax_engine import calculate_tax_impact
 
 load_dotenv()
@@ -91,17 +92,19 @@ class TaxAssistant:
                 impact = result["impact"]
 
                 return f"""
+        
+        
 **Nigeria PAYE Tax Impact (Reform Analysis)**
 
 **Income**
 • Monthly Income: ₦{result['monthly_income']:,.2f}
 • Annual Income: ₦{result['annual_income']:,.2f}
 
-**Current System ({current['label']})**
+**Former System ({current['label']})**
 • Annual Tax: ₦{current['annual_tax']:,.2f}
 • Effective Rate: {current['effective_rate']}%
 
-**Proposed Reform ({proposed['label']})**
+**Current System ({proposed['label']})**
 • Annual Tax: ₦{proposed['annual_tax']:,.2f}
 • Effective Rate: {proposed['effective_rate']}%
 • Classification: {proposed.get('classification', 'N/A')}
@@ -115,8 +118,8 @@ class TaxAssistant:
 """
             except Exception as e:
                 return f"Tax calculation failed: {str(e)}"
-
-        return [retriever_tool, calculate_nigeria_tax_2025]
+        browser = DuckDuckGoSearchResults()
+        return [retriever_tool, calculate_nigeria_tax_2025, browser]
 
 
 
