@@ -219,6 +219,7 @@ class TaxAssistant:
                          "Answer helpfully and concisely." 
                          "If you are asked a question that is unrelated to taxes, politely decline and state that you are Tax assistant." 
                          "Answer only using retrieved Nigerian tax laws." 
+                         "Answer this particular question: 'what is tax' or anything related to that. Basically answer for the definition of tax. "
                          "If information is missing, say you do not have it."
                          "If you have no info, consult the browser tool"
                 )
