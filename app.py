@@ -14,6 +14,8 @@ from langchain_core.documents import Document
 from langgraph.graph import StateGraph, MessagesState, START, END
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.sqlite import SqliteSaver
+from duckduckgo_search import DDGS
+
 from langchain_community.tools import DuckDuckGoSearchResults
 from engine.tax_engine import calculate_tax_impact
 
@@ -85,35 +87,42 @@ class TaxAssistant:
             Accepts monthly income only.
             """
             try:
-                result = calculate_tax_impact(monthly_income)
+                if monthly_income * 12 > 800000:
+                    result = calculate_tax_impact(monthly_income)
 
-                current = result["current"]
-                proposed = result["proposed"]
-                impact = result["impact"]
+                    current = result["current"]
+                    proposed = result["proposed"]
+                    impact = result["impact"]
 
-                return f"""
-**Nigeria PAYE Tax Impact (Reform Analysis)**
+                    return f"""
+                        **Nigeria PAYE Tax Impact (Reform Analysis)**
 
-**Income**
-• Monthly Income: ₦{result['monthly_income']:,.2f}
-• Annual Income: ₦{result['annual_income']:,.2f}
+                        **Income**
+                        • Monthly Income: ₦{result['monthly_income']:,.2f}
+                        • Annual Income: ₦{result['annual_income']:,.2f}
 
-**Old System ({current['label']})**
-• Annual Tax: ₦{current['annual_tax']:,.2f}
-• Effective Rate: {current['effective_rate']}%
+                        **Old System ({current['label']})**
+                        • Annual Tax: ₦{current['annual_tax']:,.2f}
+                        • Effective Rate: {current['effective_rate']}%
 
-**Current System ({proposed['label']})**
-• Annual Tax: ₦{proposed['annual_tax']:,.2f}
-• Effective Rate: {proposed['effective_rate']}%
-• Classification: {proposed.get('classification', 'N/A')}
+                        **Current System ({proposed['label']})**
+                        • Annual Tax: ₦{proposed['annual_tax']:,.2f}
+                        • Effective Rate: {proposed['effective_rate']}%
+                        • Classification: {proposed.get('classification', 'N/A')}
 
-**Impact**
-• Annual Relief: ₦{impact['annual_relief']:,.2f}
-• Monthly Relief: ₦{impact['monthly_relief']:,.2f}
-• Change: {impact['percentage_change']}%
+                        **Impact**
+                        • Annual Relief: ₦{impact['annual_relief']:,.2f}
+                        • Monthly Relief: ₦{impact['monthly_relief']:,.2f}
+                        • Change: {impact['percentage_change']}%
 
-💡 *Estimate based on reform proposals.*
-"""
+                        💡 *Estimate based on reform proposals.*
+    """
+                else:
+                    return """Individuals with annual earnings of ₦800,000 or less are exempt from 
+                    paying personal income tax.
+                    """
+            
+        
             except Exception as e:
                 return f"Tax calculation failed: {str(e)}"
         browser = DuckDuckGoSearchResults(max_results = 5)
